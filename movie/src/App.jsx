@@ -58,7 +58,8 @@ const App = () => {
           </h1>
           <Search searchTerm={search} setsearchTerm={setsearch} />
         </header>
-        <sectsion className="all-movies">
+        <section className="all-movies">
+          <ul>
           {movies.map((all) => {
             return <MovieCard key={all.id} movie={all} />;
           })}
@@ -67,7 +68,8 @@ const App = () => {
           <h2>All Movies</h2>
 
           {errorMessage && <p>{errorMessage}</p>}
-        </sectsion>
+          </ul>
+        </section>
       </div>
     </main>
   );
