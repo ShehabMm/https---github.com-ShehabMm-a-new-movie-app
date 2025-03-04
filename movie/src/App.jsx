@@ -1,54 +1,50 @@
 import React, { useEffect, useState } from "react";
 import Search from "./components/Search";
-import axios from 'axios';
-import Spinner from './components/Spinner'
+import axios from "axios";
+import Spinner from "./components/Spinner";
+import MovieCard from "./components/MovieCard";
 
-const API="https://api.themoviedb.org/3"
+const API = "https://api.themoviedb.org/3";
 
-const API_KEY = import.meta.env.TMDB_API
-
-
+const API_KEY = import.meta.env.TMDB_API;
 
 const options = {
-  method: 'GET',
+  method: "GET",
   headers: {
-    accept: 'application/json',
-    Authorization: 'Bearer meta.env.TMDB_API'
-  }
+    accept: "application/json",
+    Authorization: "Bearer meta.env.TMDB_API",
+  },
 };
 
 // const fetchMovies = ()=>{get('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc', options)
 //   .then(res => res.json())
 //   .then( res => console.log(res))
- 
+
 //   .catch(err => console.error(err))
 // }
 const App = () => {
-  const [search, setsearch] = useState("")
- const [errorMessage, seterrorMessage]=useState('')
- const [movies, setmovies]=useState([])
+  const [search, setsearch] = useState("");
+  const [errorMessage, seterrorMessage] = useState("");
+  const [movies, setmovies] = useState([]);
+  const [isLoading, setISloading] = useState(false);
 
- const fetchPosts = async()=>{
+  const fetchPosts = async () => {
+    setISloading(true);
+    try {
+      const response = await axios.get(
+        "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc",
+        options
+      );
+      setmovies(response.data.results);
+      console.log(response.data.results);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
-  try {
-    
-  const response = await axios.get('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc', options)
-  setmovies(response.data.results)
-  console.log(response.data.results)
-  } catch (err) {
-    console.log(err.response.data)
-  }
-  
-  
-  
-      }
-
-  useEffect(()=>{
-
-   
-
-    fetchPosts()
-  },[])
+  useEffect(() => {
+    fetchPosts();
+  }, []);
   return (
     <main>
       <div className="pattern" />
@@ -57,28 +53,21 @@ const App = () => {
           <img src="./public/assets/hero-img.png" alt="hero banner" />
           <h1>
             Find
-            <span className="text-gradient ml-2">Movies</span>You'll Enjoy without
-            the Hussle
+            <span className="text-gradient ml-2">Movies</span>You'll Enjoy
+            without the Hussle
           </h1>
-          <Search searchTerm={search}  setsearchTerm={setsearch}/>
+          <Search searchTerm={search} setsearchTerm={setsearch} />
+        </header>
+        <sectsion className="all-movies">
+          {movies.map((all) => {
+            return <MovieCard key={all.id} movie={all} />;
+          })}
 
-        </header> 
-        <section className="all-movies">
+          <Spinner />
+          <h2>All Movies</h2>
 
-{movies.map((all)=>{
-return(
-
-  <h1 key={all.id}>{all.title}</h1>
-)
-
-
-})}
-
-<Spinner/>
-<h2>All Movies</h2>
-
-{errorMessage && <p>{errorMessage}</p>}
-        </section>
+          {errorMessage && <p>{errorMessage}</p>}
+        </sectsion>
       </div>
     </main>
   );
