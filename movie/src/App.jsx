@@ -8,32 +8,47 @@ const API = "https://api.themoviedb.org/3";
 
 const API_KEY = import.meta.env.TMDB_API;
 
+// const options = {
+//   method: "GET",
+//   headers: {
+//     accept: "application/json",
+//     Authorization: "Bearer meta.env.TMDB_API",
+//   },
+// };
+
 const options = {
-  method: "GET",
+  method: 'GET',
   headers: {
-    accept: "application/json",
-    Authorization: "Bearer meta.env.TMDB_API",
-  },
+    accept: 'application/json',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2MzUzYjk1MDkzMjdkNjE1YzJkNzg5MDY3ZDE0ZjUyNSIsIm5iZiI6MTY5NzgwOTQyMy40NDgsInN1YiI6IjY1MzI4NDBmZWZlMzdjMDExZTc0M2RhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4gADEfWobO0d-nfG2F5PJyUroKA4A58mbuCblJV4se0'
+  }
 };
 
-// const fetchMovies = ()=>{get('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc', options)
-//   .then(res => res.json())
-//   .then( res => console.log(res))
 
-//   .catch(err => console.error(err))
-// }
 const App = () => {
-  const [search, setsearch] = useState("");
+  const [searchword, setsearch] = useState("");
   const [errorMessage, seterrorMessage] = useState("");
   const [movies, setmovies] = useState([]);
   const [isLoading, setISloading] = useState(false);
 
+
+  console.log(searchword)
+const API_Base_URL='https://api.themoviedb.org/3'
+
+
+
+const searchList = `https://api.themoviedb.org/3/search/movie?query=${searchword}&include_adult=false&language=en-US&page=1`
+
   const fetchPosts = async () => {
     setISloading(true);
     try {
+
+
+
       const response = await axios.get(
-        "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc",
-        options
+searchword?searchList:'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
+        options 
+        
       );
       setmovies(response.data.results);
       console.log(response.data.results);
@@ -44,7 +59,7 @@ const App = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [searchword]);
   return (
     <main>
       <div className="pattern" />
@@ -56,16 +71,15 @@ const App = () => {
             <span className="text-gradient ml-2">Movies</span>You'll Enjoy
             without the Hussle
           </h1>
-          <Search searchTerm={search} setsearchTerm={setsearch} />
+          <Search searchTerm={searchword} setsearchTerm={setsearch} />
         </header>
         <section className="all-movies">
-          <ul>
+
+          <ul> 
           {movies.map((all) => {
-            return <MovieCard key={all.id} movie={all} />;
+            return <MovieCard  key={all.id} movie={all} />;
           })}
 
-          <Spinner />
-          <h2>All Movies</h2>
 
           {errorMessage && <p>{errorMessage}</p>}
           </ul>
