@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Search from "./components/Search";
 import axios from "axios";
-import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
+import { useDebounce } from "@uidotdev/usehooks";
+
 
 const API = "https://api.themoviedb.org/3";
 
 const API_KEY = import.meta.env.TMDB_API;
 
-// const options = {
-//   method: "GET",
-//   headers: {
-//     accept: "application/json",
-//     Authorization: "Bearer meta.env.TMDB_API",
-//   },
-// };
 
 const options = {
-  method: 'GET',
+  method: "GET",
   headers: {
-    accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2MzUzYjk1MDkzMjdkNjE1YzJkNzg5MDY3ZDE0ZjUyNSIsIm5iZiI6MTY5NzgwOTQyMy40NDgsInN1YiI6IjY1MzI4NDBmZWZlMzdjMDExZTc0M2RhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4gADEfWobO0d-nfG2F5PJyUroKA4A58mbuCblJV4se0'
-  }
+    accept: "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2MzUzYjk1MDkzMjdkNjE1YzJkNzg5MDY3ZDE0ZjUyNSIsIm5iZiI6MTY5NzgwOTQyMy40NDgsInN1YiI6IjY1MzI4NDBmZWZlMzdjMDExZTc0M2RhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4gADEfWobO0d-nfG2F5PJyUroKA4A58mbuCblJV4se0",
+  },
 };
-
 
 const App = () => {
   const [searchword, setsearch] = useState("");
@@ -32,23 +26,23 @@ const App = () => {
   const [isLoading, setISloading] = useState(false);
 
 
-  console.log(searchword)
-const API_Base_URL='https://api.themoviedb.org/3'
+  const debouncedSearchTerm = useDebounce(searchword, 600);
 
+  const API_Base_URL = "https://api.themoviedb.org/3";
 
+  const searchList = `https://api.themoviedb.org/3/search/movie?query=${searchword}&include_adult=false&language=en-US&page=1`;
 
-const searchList = `https://api.themoviedb.org/3/search/movie?query=${searchword}&include_adult=false&language=en-US&page=1`
+  const API_KEY = import.meta.env.VITE_TMDB_API
 
+  
   const fetchPosts = async () => {
     setISloading(true);
     try {
-
-
-
       const response = await axios.get(
-searchword?searchList:'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc',
-        options 
-        
+        searchword
+          ? searchList
+          : "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc",
+        options
       );
       setmovies(response.data.results);
       console.log(response.data.results);
@@ -60,6 +54,9 @@ searchword?searchList:'https://api.themoviedb.org/3/discover/movie?include_adult
   useEffect(() => {
     fetchPosts();
   }, [searchword]);
+
+
+
   return (
     <main>
       <div className="pattern" />
@@ -74,14 +71,12 @@ searchword?searchList:'https://api.themoviedb.org/3/discover/movie?include_adult
           <Search searchTerm={searchword} setsearchTerm={setsearch} />
         </header>
         <section className="all-movies">
+          <ul>
+            {movies.map((all) => {
+              return <MovieCard key={all.id} movie={all} />;
+            })}
 
-          <ul> 
-          {movies.map((all) => {
-            return <MovieCard  key={all.id} movie={all} />;
-          })}
-
-
-          {errorMessage && <p>{errorMessage}</p>}
+            {errorMessage && <p>{errorMessage}</p>}
           </ul>
         </section>
       </div>
