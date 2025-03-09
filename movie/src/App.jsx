@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import Search from "./components/Search";
 import axios from "axios";
 import MovieCard from "./components/MovieCard";
-import { useDebounce } from "@uidotdev/usehooks";
+import {useDebounce} from'react-use';
+import Appwrite from './Appwrite'
 
 
 const API = "https://api.themoviedb.org/3";
 
-const API_KEY = import.meta.env.TMDB_API;
-
+const API_KEY = import.meta.env.VITE_TMDB_API;
 
 const options = {
   method: "GET",
@@ -24,17 +24,11 @@ const App = () => {
   const [errorMessage, seterrorMessage] = useState("");
   const [movies, setmovies] = useState([]);
   const [isLoading, setISloading] = useState(false);
-
-
-  const debouncedSearchTerm = useDebounce(searchword, 600);
-
+const [deboucesearch, setdebounce]=useState('')
   const API_Base_URL = "https://api.themoviedb.org/3";
-
   const searchList = `https://api.themoviedb.org/3/search/movie?query=${searchword}&include_adult=false&language=en-US&page=1`;
+  const API_KEY = import.meta.env.VITE_TMDB_API;
 
-  const API_KEY = import.meta.env.VITE_TMDB_API
-
-  
   const fetchPosts = async () => {
     setISloading(true);
     try {
@@ -45,7 +39,6 @@ const App = () => {
         options
       );
       setmovies(response.data.results);
-      console.log(response.data.results);
     } catch (err) {
       console.log(err.response.data);
     }
@@ -54,8 +47,7 @@ const App = () => {
   useEffect(() => {
     fetchPosts();
   }, [searchword]);
-
-
+  useDebounce(()=>setdebounce(searchword),500, [searchword])
 
   return (
     <main>
@@ -68,7 +60,7 @@ const App = () => {
             <span className="text-gradient ml-2">Movies</span>You'll Enjoy
             without the Hussle
           </h1>
-          <Search searchTerm={searchword} setsearchTerm={setsearch} />
+          <Search searchTerm={searchword} setsearchTerm={setsearch}  fetchPosts={fetchPosts} />
         </header>
         <section className="all-movies">
           <ul>
@@ -80,6 +72,7 @@ const App = () => {
           </ul>
         </section>
       </div>
+      <Appwrite/>
     </main>
   );
 };

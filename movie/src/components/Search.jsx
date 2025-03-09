@@ -1,4 +1,4 @@
-const Search = ({searchTerm, setsearchTerm})=>{
+const Search = ({searchTerm, setsearchTerm, fetchPosts})=>{
 
 return(
 
@@ -9,7 +9,10 @@ return(
 <img src="./public/assets/search.svg" alt="search" />
 
 
-<input type="text" placeholder="Search through thousands of movies" value={searchTerm} onChange={(e)=>{setsearchTerm(e.target.value)}} name="" id="" />
+<input      onKeyDown={(e) => {
+        if (e.key === "Enter")
+            fetchPosts();
+        }} type="text" placeholder="Search through thousands of movies" value={searchTerm} onChange={(e)=>{setsearchTerm(e.target.value)}} name="" id="" />
 
 </div>
 
