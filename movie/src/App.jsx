@@ -3,7 +3,6 @@ import Search from "./components/Search";
 import axios from "axios";
 import MovieCard from "./components/MovieCard";
 import {useDebounce} from'react-use';
-import Appwrite from './Appwrite'
 
 
 const API = "https://api.themoviedb.org/3";
@@ -72,7 +71,7 @@ const [deboucesearch, setdebounce]=useState('')
           </ul>
         </section>
       </div>
-      <Appwrite/>
+  
     </main>
   );
 };
