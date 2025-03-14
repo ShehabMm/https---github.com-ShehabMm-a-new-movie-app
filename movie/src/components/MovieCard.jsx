@@ -3,8 +3,9 @@ import React from "react";
 const MovieCard = ({
   movie: { title, vote_average, poster_path, release_date, original_language },
 }) => {
+  
   return (
-    <div className="movie-card mt-1">
+    <div className="movie-card mt-12">
       <img
         src={
           poster_path
