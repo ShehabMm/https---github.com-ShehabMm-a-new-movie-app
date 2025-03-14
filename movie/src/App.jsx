@@ -3,7 +3,7 @@ import Search from "./components/Search";
 import axios from "axios";
 import MovieCard from "./components/MovieCard";
 import { useDebounce } from "react-use";
-
+import Appwrite from './Appwrite'
 const API = "https://api.themoviedb.org/3";
 
 const API_KEY = import.meta.env.VITE_TMDB_API;
@@ -44,6 +44,7 @@ const App = () => {
 
   useEffect(() => {
     fetchPosts();
+    Appwrite()
   }, [searchword]);
   useDebounce(() => setdebounce(searchword), 500, [searchword]);
 
