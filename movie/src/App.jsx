@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import Search from "./components/Search";
 import axios from "axios";
 import MovieCard from "./components/MovieCard";
-import { useDebounce } from "react-use";
-import Appwrite from './Appwrite'
 const API = "https://api.themoviedb.org/3";
 
 const API_KEY = import.meta.env.VITE_TMDB_API;
@@ -19,16 +17,13 @@ const options = {
 
 const App = () => {
   const [searchword, setsearch] = useState("");
-  const [errorMessage, seterrorMessage] = useState("");
+  const [errorMessage] = useState("");
   const [movies, setmovies] = useState([]);
-  const [isLoading, setISloading] = useState(false);
-  const [deboucesearch, setdebounce] = useState("");
   const API_Base_URL = "https://api.themoviedb.org/3";
   const searchList = `https://api.themoviedb.org/3/search/movie?query=${searchword}&include_adult=false&language=en-US&page=1`;
   const API_KEY = import.meta.env.VITE_TMDB_API;
 
   const fetchPosts = async () => {
-    setISloading(true);
     try {
       const response = await axios.get(
         searchword
@@ -44,9 +39,8 @@ const App = () => {
 
   useEffect(() => {
     fetchPosts();
-    Appwrite()
-  }, [searchword]);
-  useDebounce(() => setdebounce(searchword), 500, [searchword]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main>
